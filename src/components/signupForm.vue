@@ -1,11 +1,14 @@
 <template>
     <div>
-        <form action="">
+        <form @submit.prevent="handleSubmit">
             <label for="Email">Email:</label>
             <input type="email" name="Email" required v-model="email">
 
             <label for="Password">Password:</label>
             <input type="password" name="Password" required v-model="password">
+            <div v-if="passwordError" class="error">
+                {{ passwordError }}
+            </div>
 
             <label>Role:</label>
             <select v-model="role">
@@ -13,30 +16,28 @@
                 <option value="designer">Web designer</option>
             </select>
 
+            <label>Skills:</label>
+            <input type="text" v-model="tempSkills" @keyup.alt="addSkills">
+            
+            <div v-for="skill in skills" :id="skill" class="pill" >
+                <span @click="deleteSkill(skill)" >{{ skill }}</span>
+            </div>
+
             <div class="terms">
                 <input type="checkbox" v-model="term">
                 <label>Accept terms and conditions</label>
             </div>
 
-            <div class="terms">
-                <input type="checkbox" value="Shaun" v-model="names">
-                <label>Shaun</label>
+            <div class="submit">
+                <button>Create an Account</button>
             </div>
-            <div class="terms">
-                <input type="checkbox" value="Yoshi" v-model="names">
-                <label>Yoshi</label>
-            </div>
-            <div class="terms">
-                <input type="checkbox" value="Mario" v-model="names">
-                <label>Mario</label>
-            </div>
-            
         </form>
+
         <p>Email: {{ email }}</p>
         <p>Password: {{ password }}</p>
         <p>Role: {{ role }}</p>
         <p>Terms accepted: {{ term }}</p>
-        <p>Names: {{ names }}</p>
+        <p>Skills added: {{ skills }}</p>
     </div>
 </template>
 
@@ -48,7 +49,39 @@
                 password: '',
                 role: '',
                 term: false,
-                names: []
+                tempSkills: '',
+                skills: [],
+                passwordError: ''
+            }
+        },
+        methods: {
+            addSkills(e) {
+                if(e.key === ',' && this.tempSkills) {
+
+                    if(!this.skills.includes(this.tempSkills)) {
+                        this.skills.push(this.tempSkills)
+                    }
+                    
+
+                    this.tempSkills = ''
+                }
+            },
+            deleteSkill(skill) {
+                this.skills = this.skills.filter( (item) => {
+                    return item !== skill
+                })
+            },
+            handleSubmit() {
+                //validate password
+                this.passwordError = this.password.length > 5 ? '' : 'The password length must be atleast 6 char long!'
+
+                if(!this.passwordError){
+                    console.log('email: ',this.email)
+                    console.log('Password: ',this.password)
+                    console.log('role: ',this.role)
+                    console.log('skills: ',this.skills)
+                    console.log('Terms Accepted: ',this.term)
+                }
             }
         }
     }
@@ -88,5 +121,35 @@ input[type="checkbox"] {
     margin: 0 10px 0 0;
     position: relative;
     top: 2px;
+}
+.pill{
+    margin: 20px 10px 0 0;
+    display: inline-block;
+    padding: 6px 12px;
+    background: #eee;
+    border-radius: 20px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    font-weight: bold;
+    color: #777;
+    cursor: pointer;
+}
+button{
+    background: #0b6dff;
+    border: 0;
+    padding: 10px 20px;
+    margin-top: 20px;
+    color: white;
+    border-radius: 20px;
+}
+.submit{
+    text-align: center;
+}
+.error{
+    color: #ff0062;
+    margin-top: 10px;
+    font-size: 0.8em;
+    font-weight: bold;
+
 }
 </style>
