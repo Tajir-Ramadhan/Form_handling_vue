@@ -2,7 +2,7 @@
     <div>
         <form @submit.prevent="handleSubmit">
             <label for="Email">Email:</label>
-            <input type="email" name="Email" required v-model="email">
+            <input type="email" name="Email" required v-model="email" autocomplete="additional-name">
 
             <label for="Password">Password:</label>
             <input type="password" name="Password" required v-model="password">
@@ -17,7 +17,7 @@
             </select>
 
             <label>Skills:</label>
-            <input type="text" v-model="tempSkills" @keyup.alt="addSkills">
+            <input type="text" v-model="tempSkills" @keyup.alt="addSkills" autocomplete="additional-name">
             
             <div v-for="skill in skills" :id="skill" class="pill" >
                 <span @click="deleteSkill(skill)" >{{ skill }}</span>
